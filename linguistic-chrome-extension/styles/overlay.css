@@ -1,0 +1,272 @@
+/* overlay.css - Visual styling for linguistic tokens and overlays */
+
+:root {
+  /* Quick Mode - POS Colors */
+  --noun-color: #4A90E2;          /* כחול - שמות עצם */
+  --verb-color: #E24A4A;          /* אדום - פעלים */
+  --adj-color: #7ED321;           /* ירוק - תארים */
+  --adv-color: #F5A623;           /* כתום - תארי פועל */
+  --prep-color: #9013FE;          /* סגול - מילות יחס */
+  --conj-color: #50E3C2;          /* טורקיז - מילות חיבור */
+  --pron-color: #BD10E0;          /* ורוד - כינויים */
+  --det-color: #8B8B8B;           /* אפור - מילות יידוע */
+  --num-color: #FF6B6B;           /* אדום בהיר - מספרים */
+  --intj-color: #FFA07A;          /* כתום בהיר - קריאות */
+
+  /* Deep Mode - Additional Styling */
+  --subject-underline: 3px solid #4A90E2;
+  --object-underline: 3px dashed #E24A4A;
+  --modifier-opacity: 0.7;
+}
+
+/* Linguistic token base styling */
+.linguistic-token {
+  position: relative;
+  display: inline;
+  padding: 2px 4px;
+  margin: 0 1px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  line-height: 1.8;
+}
+
+/* POS-based coloring */
+.linguistic-token.noun {
+  background-color: rgba(74, 144, 226, 0.15);
+  border-bottom: 2px solid rgba(74, 144, 226, 0.4);
+}
+
+.linguistic-token.verb {
+  background-color: rgba(226, 74, 74, 0.15);
+  border-bottom: 2px solid rgba(226, 74, 74, 0.4);
+}
+
+.linguistic-token.adj {
+  background-color: rgba(126, 211, 33, 0.15);
+  border-bottom: 2px solid rgba(126, 211, 33, 0.4);
+}
+
+.linguistic-token.adv {
+  background-color: rgba(245, 166, 35, 0.15);
+  border-bottom: 2px solid rgba(245, 166, 35, 0.4);
+}
+
+.linguistic-token.prep {
+  background-color: rgba(144, 19, 254, 0.15);
+  border-bottom: 2px solid rgba(144, 19, 254, 0.4);
+}
+
+.linguistic-token.conj {
+  background-color: rgba(80, 227, 194, 0.15);
+  border-bottom: 2px solid rgba(80, 227, 194, 0.4);
+}
+
+.linguistic-token.pron {
+  background-color: rgba(189, 16, 224, 0.15);
+  border-bottom: 2px solid rgba(189, 16, 224, 0.4);
+}
+
+.linguistic-token.det {
+  background-color: rgba(139, 139, 139, 0.15);
+  border-bottom: 2px solid rgba(139, 139, 139, 0.4);
+}
+
+.linguistic-token.num {
+  background-color: rgba(255, 107, 107, 0.15);
+  border-bottom: 2px solid rgba(255, 107, 107, 0.4);
+}
+
+.linguistic-token.intj {
+  background-color: rgba(255, 160, 122, 0.15);
+  border-bottom: 2px solid rgba(255, 160, 122, 0.4);
+}
+
+/* Learned words styling */
+.linguistic-token.learned {
+  background-color: transparent !important;
+  border-bottom: none !important;
+  opacity: 1;
+  cursor: default;
+}
+
+/* Hover state */
+.linguistic-token:not(.learned):hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Micro POS tag */
+.linguistic-token .pos-tag {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+  letter-spacing: 0.5px;
+}
+
+.linguistic-token:hover .pos-tag {
+  opacity: 1;
+}
+
+/* Sentence container */
+.linguistic-sentence {
+  display: inline;
+}
+
+/* Dependency arcs */
+.dependency-arcs {
+  overflow: visible;
+}
+
+/* Cosmic blur overlay */
+.cosmic-blur-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999998;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(
+    45deg,
+    rgba(74, 144, 226, 0.1),
+    rgba(126, 211, 33, 0.1),
+    rgba(144, 19, 254, 0.1),
+    rgba(245, 166, 35, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: cosmicGradient 4s ease infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes cosmicGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.cosmic-content {
+  text-align: center;
+  color: white;
+  text-shadow: 0 0 20px rgba(74, 144, 226, 0.8);
+}
+
+.cosmic-icon {
+  font-size: 64px;
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.cosmic-text {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+.cosmic-subtext {
+  font-size: 14px;
+  opacity: 0.8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+.cosmic-progress {
+  margin: 20px auto 0;
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cosmic-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4A90E2, #7ED321);
+  animation: progressFlow 2s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+@keyframes progressFlow {
+  0% {
+    width: 0%;
+    opacity: 0.5;
+  }
+  50% {
+    width: 70%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
+/* Notifications */
+.linguistic-notification {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Deep mode specific styles */
+.linguistic-token.dependency-head {
+  font-weight: 600;
+}
+
+.linguistic-token.nsubj {
+  border-bottom: 3px solid var(--noun-color);
+}
+
+.linguistic-token.dobj {
+  border-bottom: 3px dashed var(--verb-color);
+}
+
+/* Ensure tokens don't break layout */
+.linguistic-token {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Override page styles that might interfere */
+.linguistic-token * {
+  pointer-events: none;
+}
+
+/* Make sure text remains selectable */
+.linguistic-token {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+}

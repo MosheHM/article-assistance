@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Linguistic Lens",
+  "version": "1.0.0",
+  "description": "AI-powered linguistic analysis for English learners - helping Hebrew speakers read academic papers and technical documentation",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "libs/readability.min.js",
+        "utils/db-manager.js",
+        "utils/learned-words.js",
+        "content/content-analyzer.js",
+        "content/visual-overlay.js",
+        "content/hover-controller.js",
+        "content/content-script.js"
+      ],
+      "css": [
+        "styles/overlay.css",
+        "styles/popup.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "ui/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["styles/*.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

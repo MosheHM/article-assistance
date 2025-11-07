@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linguistic Lens - הגדרות</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #eee;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .learned-words-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .word-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+
+    .word-item:hover {
+      background: #e9ecef;
+      transform: translateX(-4px);
+    }
+
+    .word-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .word-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .word-pos {
+      font-size: 12px;
+      padding: 4px 8px;
+      background: #667eea;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .word-translation {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .delete-btn {
+      padding: 6px 12px;
+      background: #E24A4A;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #c93a3a;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-danger {
+      background: #E24A4A;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c93a3a;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: #666;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 16px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .back-link:hover {
+      transform: translateX(4px);
+    }
+
+    .search-box {
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <a href="#" class="back-link" id="backBtn">← חזרה</a>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">⚙️</div>
+      <h1>הגדרות Linguistic Lens</h1>
+      <div class="subtitle">ניהול מילים שנלמדו והגדרות מתקדמות</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📊 סטטיסטיקות</div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalWords">0</div>
+          <div class="stat-label">מילים שנלמדו</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="cacheSize">0</div>
+          <div class="stat-label">ניתוחים במטמון</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📚 מילים שנלמדו</div>
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="חפש מילה...">
+      </div>
+      <div id="learnedWordsList" class="learned-words-list">
+        <div class="empty-state">
+          <div class="empty-icon">📖</div>
+          <div class="empty-text">עדיין לא למדת מילים. התחל לקרוא וסמן מילים שלמדת!</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="clearAllBtn" class="btn btn-danger">מחק את כל המילים</button>
+        <button id="exportBtn" class="btn btn-secondary">ייצא רשימה</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🗄️ ניהול מטמון</div>
+      <p style="color: #666; margin-bottom: 12px; font-size: 14px;">
+        המטמון שומר ניתוחים של דפים שכבר עברת כדי להאיץ טעינות עתידיות.
+      </p>
+      <div class="actions">
+        <button id="clearCacheBtn" class="btn btn-secondary">נקה מטמון</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
