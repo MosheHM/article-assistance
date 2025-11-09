@@ -1,0 +1,44 @@
+# Linguistic Lens - Git Ignore
+
+# IMPORTANT: Protect your Gemini API key!
+# Uncomment the line below if you have configured your API key in config.js
+# config.js
+
+# Generated icons (these should be generated locally)
+icons/icon16.png
+icons/icon48.png
+icons/icon128.png
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
+
+# Chrome extension packaging
+*.crx
+*.pem
+*.zip
+
+# Node modules (if using build tools)
+node_modules/
+package-lock.json
+
+# Build output (if using build tools)
+dist/
+build/
+
+# Environment files
+.env
+.env.local

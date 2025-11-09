@@ -1,0 +1,170 @@
+/* popup.css - Hover popup styling */
+
+.linguistic-popup {
+  position: fixed;
+  background: white;
+  border: 2px solid #4A90E2;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 9999999;
+  min-width: 250px;
+  max-width: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  display: none;
+  direction: rtl;
+  text-align: right;
+}
+
+.linguistic-popup.visible {
+  display: block;
+  animation: popupFadeIn 0.2s ease;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.word-display {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 0.3px;
+}
+
+.lemma-display {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.popup-body {
+  margin-bottom: 12px;
+}
+
+.popup-body > div {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.popup-body strong {
+  color: #4A90E2;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.translation {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.pos-info {
+  color: #666;
+}
+
+.inflection-info {
+  color: #666;
+  font-size: 13px;
+}
+
+.popup-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.mark-learned-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #7ED321 0%, #6BC116 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.mark-learned-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6BC116 0%, #5AAF12 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(126, 211, 33, 0.3);
+}
+
+.mark-learned-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.mark-learned-btn:disabled,
+.mark-learned-btn.learned-btn {
+  background: #95a5a6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.mark-learned-btn.learned-btn {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+/* POS-specific colors in popup */
+.pos-info .pos-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  margin-right: 6px;
+}
+
+.pos-badge.noun { background: #4A90E2; }
+.pos-badge.verb { background: #E24A4A; }
+.pos-badge.adj { background: #7ED321; }
+.pos-badge.adv { background: #F5A623; }
+.pos-badge.prep { background: #9013FE; }
+.pos-badge.conj { background: #50E3C2; }
+.pos-badge.pron { background: #BD10E0; }
+.pos-badge.det { background: #8B8B8B; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .linguistic-popup {
+    min-width: 200px;
+    max-width: 90vw;
+    padding: 12px;
+  }
+
+  .word-display {
+    font-size: 18px;
+  }
+
+  .popup-body > div {
+    font-size: 13px;
+  }
+}
+
+/* Ensure popup is above everything else */
+.linguistic-popup {
+  z-index: 2147483647 !important;
+}
