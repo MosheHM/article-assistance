@@ -66,12 +66,14 @@ class CoordinateOverlay {
     container.id = 'linguistic-coordinate-overlay';
     container.className = 'linguistic-coordinate-overlay';
 
+    // Use absolute positioning relative to the document
+    // This ensures coordinates align with the page content regardless of scroll position
     container.style.cssText = `
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 9999997;
       overflow: visible;
@@ -149,9 +151,10 @@ class CoordinateOverlay {
 
   /**
    * Scale normalized bounding box coordinates (0-1000) to viewport pixels
+   * and adjust for scroll position when screenshot was captured
    * @param {number[]} bbox - [ymin, xmin, ymax, xmax] in 0-1000 scale
-   * @param {object} viewport - {width, height}
-   * @returns {object} {x, y, width, height} in pixels
+   * @param {object} viewport - {width, height, scrollX, scrollY}
+   * @returns {object} {x, y, width, height} in pixels (document coordinates)
    */
   scaleCoordinates(bbox, viewport) {
     if (!bbox || bbox.length !== 4 || !viewport) {
@@ -172,7 +175,18 @@ class CoordinateOverlay {
     const width = (x2 - x1) * viewport.width;
     const height = (y2 - y1) * viewport.height;
 
-    return { x, y, width, height };
+    // Add scroll offset to convert from viewport coordinates to document coordinates
+    // The screenshot captured the visible viewport at a specific scroll position
+    // We need to position the overlay at that same location in the document
+    const scrollX = viewport.scrollX || 0;
+    const scrollY = viewport.scrollY || 0;
+
+    return { 
+      x: x + scrollX, 
+      y: y + scrollY, 
+      width, 
+      height 
+    };
   }
 
   /**
