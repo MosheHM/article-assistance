@@ -21,12 +21,12 @@
 const CONFIG = {
   // Replace this with your actual Gemini API key
   // Get one free at: https://makersuite.google.com/app/apikey
-  GEMINI_API_KEY: 'YOUR_GEMINI_API_KEY_HERE',
+  GEMINI_API_KEY: 'AIzaSyAD4xIbLMOx8diRDQajD_c1FGf26W2n7JQ',
 
   // Model configurations
   MODELS: {
-    QUICK: 'gemini-2.0-flash-exp',
-    DEEP: 'gemini-2.0-flash-thinking-exp'
+    QUICK: 'gemini-2.5-flash',
+    DEEP: 'gemini-2.5-pro'
   },
 
   // API endpoint
@@ -36,14 +36,12 @@ const CONFIG = {
   CACHE_DURATION_DAYS: 7,
 
   // Text processing settings
-  MAX_WORDS_PER_CHUNK: 3000,
+  MAX_WORDS_PER_CHUNK: 2000,  // Reduced from 3000 to prevent truncation
 
   // Generation config
   GENERATION_CONFIG: {
     temperature: 0.1,
-    topP: 0.95,
-    topK: 40,
-    maxOutputTokens: 8192
+    responseMimeType: "application/json"  // Force JSON output format
   }
 };
 

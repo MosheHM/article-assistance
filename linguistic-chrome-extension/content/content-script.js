@@ -1,11 +1,11 @@
-// content-script.js - Main orchestrator for Linguistic Lens
+// content-script.js - Main orchestrator for Linguistic Lens (Screenshot-based)
 
 class LinguisticLens {
   constructor() {
     this.mode = 'quick';
     this.db = new DBManager();
-    this.contentAnalyzer = new ContentAnalyzer();
-    this.overlay = new VisualOverlay();
+    this.screenshotManager = new ScreenshotManager();
+    this.overlay = new CoordinateOverlay();
     this.learnedWords = new LearnedWordsManager();
     this.hoverController = null;
     this.isProcessing = false;
@@ -22,7 +22,7 @@ class LinguisticLens {
     this.mode = mode;
 
     try {
-      console.log(`Initializing Linguistic Lens in ${mode} mode`);
+      console.log(`📸 Initializing Linguistic Lens in ${mode} mode (screenshot-based)`);
 
       // Show cosmic blur animation
       showCosmicBlur();
@@ -41,79 +41,83 @@ class LinguisticLens {
       // Clean up old cache
       this.db.clearOldCache().catch(err => console.warn('Failed to clear old cache:', err));
 
-      // Extract content
-      console.log('Extracting article content...');
-      const article = this.contentAnalyzer.extractMainContent();
+      // Capture screenshot
+      console.log('📸 Capturing screenshot...');
+      updateCosmicBlurText('מצלם מסך...');
 
-      if (!article || !article.content || article.content.trim().length < 50) {
-        throw new Error('Could not extract meaningful article content. Try selecting text manually or refreshing the page.');
-      }
+      const screenshot = await this.screenshotManager.captureViewport();
+      console.log(`📸 Screenshot captured: ${screenshot.viewport.width}x${screenshot.viewport.height}`);
 
-      console.log(`Extracted ${article.content.length} characters`);
-
-      // Check if content is English
-      if (!this.contentAnalyzer.isEnglishContent()) {
-        throw new Error('This page does not appear to contain English text.');
-      }
+      // Hash screenshot for caching
+      console.log('🔍 Hashing screenshot for cache lookup...');
+      const screenshotHash = await this.screenshotManager.hashScreenshot(screenshot.base64);
+      console.log(`🔍 Screenshot hash: ${screenshotHash.substring(0, 16)}...`);
 
       // Check cache
-      console.log('Checking cache...');
-      const cached = await this.db.getCachedAnalysis(article.content);
+      console.log('📦 Checking cache...');
+      const cached = await this.db.getCachedScreenshotAnalysis(screenshotHash);
 
       if (cached) {
-        console.log('Using cached analysis');
-        this.overlay.render(cached, article.element, this.mode);
+        console.log('✓ Using cached screenshot analysis');
+        this.overlay.render(cached, screenshot.viewport, this.mode);
         hideCosmicBlur();
         this.showSuccessMessage('Analysis loaded from cache!');
         this.isProcessing = false;
         this.isInitialized = true;
+
+        // Start monitoring for viewport changes
+        this.startViewportMonitoring();
         return;
       }
 
-      // Analyze with Gemini
-      console.log('Analyzing with Gemini API...');
-      updateCosmicBlurText('Sending to Gemini AI...');
+      // Analyze screenshot with Gemini Vision API
+      console.log('🤖 Analyzing screenshot with Gemini Vision API...');
+      updateCosmicBlurText('שולח ל-Gemini Vision AI...');
 
-      const analysis = await this.analyzeWithGemini(article.content, this.mode);
+      const analysis = await this.analyzeScreenshotWithGemini(screenshot.base64, screenshot.viewport, this.mode);
 
-      if (!analysis || !analysis.sentences || analysis.sentences.length === 0) {
-        throw new Error('Failed to get valid analysis from Gemini API');
+      if (!analysis || !analysis.words || analysis.words.length === 0) {
+        throw new Error('Failed to get valid analysis from Gemini Vision API');
       }
 
-      console.log(`Received analysis for ${analysis.sentences.length} sentences`);
+      console.log(`✓ Received analysis for ${analysis.words.length} words`);
 
       // Cache result
-      console.log('Caching analysis...');
-      await this.db.saveAnalysis(article.content, analysis, this.mode);
+      console.log('💾 Caching screenshot analysis...');
+      await this.db.saveScreenshotAnalysis(screenshotHash, screenshot.viewport, analysis, this.mode);
 
-      // Render
-      console.log('Rendering overlay...');
-      updateCosmicBlurText('Rendering analysis...');
-      this.overlay.render(analysis, article.element, this.mode);
+      // Render coordinate overlay
+      console.log('🎨 Rendering coordinate overlay...');
+      updateCosmicBlurText('מציג ניתוח...');
+      this.overlay.render(analysis, screenshot.viewport, this.mode);
 
       hideCosmicBlur();
-      this.showSuccessMessage(`Analysis complete! ${analysis.sentences.length} sentences analyzed.`);
+      this.showSuccessMessage(`Analysis complete! ${analysis.words.length} words analyzed.`);
 
       this.isProcessing = false;
       this.isInitialized = true;
 
+      // Start monitoring for viewport changes
+      this.startViewportMonitoring();
+
       // Log stats
       const stats = this.overlay.getStats();
-      console.log('Rendering stats:', stats);
+      console.log('📊 Rendering stats:', stats);
 
     } catch (error) {
-      console.error('Linguistic Lens error:', error);
+      console.error('❌ Linguistic Lens error:', error);
       hideCosmicBlur();
       this.showError(error.message);
       this.isProcessing = false;
     }
   }
 
-  async analyzeWithGemini(text, mode) {
+  async analyzeScreenshotWithGemini(screenshotBase64, viewport, mode) {
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({
-        action: 'analyze',
-        text: text,
+        action: 'analyzeScreenshot',
+        screenshot: screenshotBase64,
+        viewport: viewport,
         mode: mode
       }, response => {
         if (chrome.runtime.lastError) {
@@ -127,6 +131,28 @@ class LinguisticLens {
           resolve(response.analysis);
         }
       });
+    });
+  }
+
+  /**
+   * Start monitoring for viewport changes (scroll/resize)
+   */
+  startViewportMonitoring() {
+    this.screenshotManager.startMonitoring((changeType) => {
+      if (changeType === 'resize') {
+        // Clear overlay on resize
+        console.log('📐 Viewport resized, clearing overlay');
+        this.overlay.clear();
+        this.screenshotManager.hideReAnalyzeButton();
+        this.showSuccessMessage('Viewport changed - please re-activate extension');
+        this.isInitialized = false;
+      } else if (changeType === 'reanalyze') {
+        // User clicked re-analyze button
+        console.log('🔄 Re-analyzing new viewport');
+        this.overlay.clear();
+        this.screenshotManager.reset();
+        this.initialize(this.mode);
+      }
     });
   }
 

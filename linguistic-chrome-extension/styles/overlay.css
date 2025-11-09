@@ -270,3 +270,123 @@
   -webkit-user-select: text;
   -moz-user-select: text;
 }
+
+/* ===========================================
+   COORDINATE-BASED OVERLAY STYLES
+   (Screenshot-based approach)
+   =========================================== */
+
+/* Main coordinate overlay container */
+.linguistic-coordinate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999997;
+  overflow: visible;
+}
+
+/* Individual word boxes (positioned absolutely) */
+.linguistic-word-box {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* POS-based colors for word boxes */
+.linguistic-word-box-noun {
+  background-color: rgba(74, 144, 226, 0.15);
+}
+
+.linguistic-word-box-verb {
+  background-color: rgba(226, 74, 74, 0.15);
+}
+
+.linguistic-word-box-adj {
+  background-color: rgba(126, 211, 33, 0.15);
+}
+
+.linguistic-word-box-adv {
+  background-color: rgba(245, 166, 35, 0.15);
+}
+
+.linguistic-word-box-prep {
+  background-color: rgba(144, 19, 254, 0.15);
+}
+
+.linguistic-word-box-conj {
+  background-color: rgba(80, 227, 194, 0.15);
+}
+
+.linguistic-word-box-pron {
+  background-color: rgba(189, 16, 224, 0.15);
+}
+
+.linguistic-word-box-det {
+  background-color: rgba(139, 139, 139, 0.15);
+}
+
+.linguistic-word-box-num {
+  background-color: rgba(255, 107, 107, 0.15);
+}
+
+.linguistic-word-box-intj {
+  background-color: rgba(255, 160, 122, 0.15);
+}
+
+.linguistic-word-box-unknown {
+  background-color: rgba(200, 200, 200, 0.15);
+}
+
+/* Re-analyze button */
+.linguistic-reanalyze-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999998;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.3s ease;
+}
+
+.linguistic-reanalyze-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
+}
+
+.linguistic-reanalyze-button .reanalyze-icon {
+  font-size: 18px;
+}
+
+.linguistic-reanalyze-button .reanalyze-text {
+  white-space: nowrap;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

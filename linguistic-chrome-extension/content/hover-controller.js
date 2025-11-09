@@ -28,22 +28,22 @@ class HoverController {
       this.scheduleHide();
     });
 
-    // Add event delegation for token hovers
+    // Add event delegation for token hovers (both old DOM-based and new coordinate-based)
     document.addEventListener('mouseover', (e) => {
-      const token = e.target.closest('.linguistic-token');
+      const token = e.target.closest('.linguistic-token, .linguistic-word-box');
       if (token) {
         this.handleTokenHover(e, token);
       }
     });
 
     document.addEventListener('mouseout', (e) => {
-      const token = e.target.closest('.linguistic-token');
+      const token = e.target.closest('.linguistic-token, .linguistic-word-box');
       if (token && !this.isMouseOverPopup) {
         this.scheduleHide();
       }
     });
 
-    console.log('HoverController initialized');
+    console.log('HoverController initialized (supports both DOM and coordinate overlays)');
   }
 
   handleTokenHover(event, tokenElement) {

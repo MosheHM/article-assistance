@@ -80,6 +80,47 @@ class DBManager {
     });
   }
 
+  /**
+   * Get cached screenshot analysis by screenshot hash
+   * @param {string} screenshotHash - SHA-256 hash of screenshot
+   * @returns {Promise<object|null>} Cached analysis or null
+   */
+  async getCachedScreenshotAnalysis(screenshotHash) {
+    if (!this.db) {
+      console.warn('Database not initialized');
+      return null;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['analyses'], 'readonly');
+      const store = transaction.objectStore('analyses');
+      const request = store.get(screenshotHash);
+
+      request.onsuccess = () => {
+        const result = request.result;
+
+        // Check if cache is still valid (7 days)
+        const cacheDuration = 7 * 24 * 60 * 60 * 1000;
+        if (result && Date.now() - result.timestamp < cacheDuration) {
+          console.log('📸 Screenshot cache hit');
+          resolve(result.analysis);
+        } else {
+          if (result) {
+            console.log('📸 Screenshot cache expired');
+          } else {
+            console.log('📸 Screenshot cache miss');
+          }
+          resolve(null);
+        }
+      };
+
+      request.onerror = () => {
+        console.error('Error retrieving cached screenshot analysis:', request.error);
+        reject(request.error);
+      };
+    });
+  }
+
   async saveAnalysis(content, analysis, mode) {
     if (!this.db) {
       console.warn('Database not initialized');
@@ -109,6 +150,48 @@ class DBManager {
 
       request.onerror = () => {
         console.error('Error caching analysis:', request.error);
+        reject(request.error);
+      };
+    });
+  }
+
+  /**
+   * Save screenshot-based analysis with screenshot hash
+   * @param {string} screenshotHash - SHA-256 hash of screenshot
+   * @param {object} viewport - Viewport dimensions
+   * @param {object} analysis - Vision API analysis result
+   * @param {string} mode - 'quick' or 'deep'
+   * @returns {Promise<void>}
+   */
+  async saveScreenshotAnalysis(screenshotHash, viewport, analysis, mode) {
+    if (!this.db) {
+      console.warn('Database not initialized');
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(['analyses'], 'readwrite');
+      const store = transaction.objectStore('analyses');
+
+      const data = {
+        id: screenshotHash,
+        url: window.location.href,
+        timestamp: Date.now(),
+        mode: mode,
+        viewport: viewport,
+        type: 'screenshot', // Mark as screenshot-based
+        analysis: analysis
+      };
+
+      const request = store.put(data);
+
+      request.onsuccess = () => {
+        console.log('📸 Screenshot analysis cached successfully');
+        resolve();
+      };
+
+      request.onerror = () => {
+        console.error('Error caching screenshot analysis:', request.error);
         reject(request.error);
       };
     });

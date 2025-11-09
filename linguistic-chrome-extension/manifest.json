@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -18,11 +19,10 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "libs/readability.min.js",
         "utils/db-manager.js",
         "utils/learned-words.js",
-        "content/content-analyzer.js",
-        "content/visual-overlay.js",
+        "utils/screenshot-manager.js",
+        "content/coordinate-overlay.js",
         "content/hover-controller.js",
         "content/content-script.js"
       ],
