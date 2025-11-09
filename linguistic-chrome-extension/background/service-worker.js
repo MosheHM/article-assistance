@@ -1,5 +1,8 @@
 // service-worker.js - Background service worker for Gemini API integration
 
+// Import configuration
+importScripts('../config.js');
+
 // Quick mode prompt template
 const QUICK_MODE_PROMPT = (text) => `
 Analyze the following English text for Hebrew-speaking language learners.
@@ -118,16 +121,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Handle analysis request
 async function handleAnalysis(text, mode) {
   try {
-    // Get API key from storage
-    const stored = await chrome.storage.local.get('geminiApiKey');
-    const apiKey = stored.geminiApiKey;
+    // Get API key from config (provided by developer)
+    const apiKey = self.LINGUISTIC_LENS_CONFIG.GEMINI_API_KEY;
 
-    if (!apiKey) {
-      throw new Error('API key not found. Please configure in extension popup.');
+    if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+      throw new Error('API key not configured. Please edit config.js and add your Gemini API key.');
     }
 
     // Split text into chunks if too long (max ~3000 words per chunk)
-    const chunks = splitTextIntoChunks(text, 3000);
+    const chunks = splitTextIntoChunks(text, self.LINGUISTIC_LENS_CONFIG.MAX_WORDS_PER_CHUNK);
     const allSentences = [];
 
     // Process each chunk
@@ -153,15 +155,14 @@ async function handleAnalysis(text, mode) {
 
 // Call Gemini API
 async function callGeminiAPI(text, mode, apiKey) {
-  const modelName = mode === 'quick'
-    ? 'gemini-2.0-flash-exp'
-    : 'gemini-2.0-flash-thinking-exp';
+  const config = self.LINGUISTIC_LENS_CONFIG;
+  const modelName = mode === 'quick' ? config.MODELS.QUICK : config.MODELS.DEEP;
 
   const prompt = mode === 'quick'
     ? QUICK_MODE_PROMPT(text)
     : DEEP_MODE_PROMPT(text);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+  const url = `${config.API_ENDPOINT}/${modelName}:generateContent?key=${apiKey}`;
 
   try {
     const response = await fetch(url, {
@@ -173,12 +174,7 @@ async function callGeminiAPI(text, mode, apiKey) {
         contents: [{
           parts: [{ text: prompt }]
         }],
-        generationConfig: {
-          temperature: 0.1,
-          topP: 0.95,
-          topK: 40,
-          maxOutputTokens: 8192,
-        }
+        generationConfig: config.GENERATION_CONFIG
       })
     });
 

@@ -2,13 +2,16 @@
 
 AI-powered Chrome extension that helps Hebrew-speaking language learners read English academic papers and technical documentation with real-time linguistic analysis and translation.
 
+> **Note for Developers**: The Gemini API key is configured by YOU (the extension developer), not by end users. See [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md) for configuration instructions.
+
 ## Features
 
 ### Core Functionality
-- **Content Extraction**: Automatically detects and isolates main article content using Mozilla Readability
-- **Linguistic Analysis**: Provides part-of-speech tagging, lemmatization, and contextual Hebrew translations
-- **Visual Overlay**: Color-codes words based on grammatical role
-- **Interactive Hover**: Shows detailed analysis popup on word hover
+- **Instant Analysis**: Click and analyze - no setup required for users
+- **Content Extraction**: Automatically detects and isolates main article content
+- **Linguistic Analysis**: Part-of-speech tagging, lemmatization, and contextual Hebrew translations
+- **Visual Overlay**: Color-coded words based on grammatical role
+- **Interactive Hover**: Detailed analysis popup on word hover
 - **Learning Tracker**: Mark words as "learned" - they won't be highlighted again
 - **Smart Caching**: 7-day local cache for instant re-analysis
 
@@ -31,47 +34,34 @@ AI-powered Chrome extension that helps Hebrew-speaking language learners read En
 
 ## Installation
 
-### Prerequisites
-1. **Google Chrome** (or Chromium-based browser)
-2. **Gemini API Key** - Get one free at [Google AI Studio](https://makersuite.google.com/app/apikey)
+### For End Users
 
-### Setup Steps
+1. **Install the extension**
+   - Download from Chrome Web Store (when published)
+   - Or: Get the extension package from your administrator
+   - Or: Load unpacked (for development)
 
-1. **Clone or download this repository**
-   ```bash
-   git clone <repository-url>
-   cd linguistic-chrome-extension
-   ```
+2. **Start using immediately**
+   - No API key configuration needed
+   - No account creation required
+   - Just install and go!
 
-2. **Add Extension Icons** (Required)
+3. **Navigate to any English article** and click the extension icon
 
-   Create icon files in the `icons/` directory:
-   - `icon16.png` - 16x16 pixels
-   - `icon48.png` - 48x48 pixels
-   - `icon128.png` - 128x128 pixels
+### For Developers
 
-   You can use any image editor or online tool to create simple icons. Suggested icon: 🔍 or 🧠 emoji on a gradient background.
+See [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md) for detailed setup instructions including:
+- How to configure your Gemini API key
+- Security considerations
+- Production deployment options
+- Rate limiting strategies
 
-   **Quick Icon Generation** (using ImageMagick):
-   ```bash
-   # If you have ImageMagick installed
-   convert -size 128x128 -background "#667eea" -fill white -font Arial -pointsize 80 -gravity center label:"🔍" icons/icon128.png
-   convert icons/icon128.png -resize 48x48 icons/icon48.png
-   convert icons/icon128.png -resize 16x16 icons/icon16.png
-   ```
-
-3. **Load Extension in Chrome**
-   - Open Chrome and navigate to `chrome://extensions/`
-   - Enable "Developer mode" (toggle in top-right corner)
-   - Click "Load unpacked"
-   - Select the `linguistic-chrome-extension` folder
-   - The extension should now appear in your extensions list
-
-4. **Configure API Key**
-   - Click the extension icon in your Chrome toolbar
-   - Enter your Gemini API key in the input field
-   - Click "Save"
-   - Your key is stored locally and never sent anywhere except Google's Gemini API
+**Quick Developer Setup:**
+1. Get Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Edit `config.js` and add your API key
+3. Generate icons (`icons/GENERATE_ICONS.html`)
+4. Load extension in Chrome (`chrome://extensions/`)
+5. Done!
 
 ## Usage
 
@@ -84,7 +74,7 @@ AI-powered Chrome extension that helps Hebrew-speaking language learners read En
    - Click "מצב מתקדם" (Deep Mode) for comprehensive analysis
 4. **Wait for processing** - You'll see a cosmic blur animation
 5. **Read the analyzed text** - Words are color-coded by part of speech
-6. **Hover over words** to see detailed information:
+6. **Hover over words** to see:
    - Hebrew translation
    - Part of speech
    - Lemma (base form)
@@ -110,17 +100,11 @@ AI-powered Chrome extension that helps Hebrew-speaking language learners read En
 4. **Clear all**: Click "מחק את כל המילים" (with confirmation)
 5. **Export list**: Click "ייצא רשימה" to download as text file
 
-### Cache Management
-
-- Analyses are cached for **7 days**
-- View cache size in Settings
-- Clear cache manually: Settings → "נקה מטמון"
-- Old cache entries are automatically cleaned up
-
 ## Project Structure
 
 ```
 linguistic-chrome-extension/
+├── config.js                      # 🔑 API key configuration (CONFIGURE THIS!)
 ├── manifest.json                   # Extension configuration
 ├── background/
 │   └── service-worker.js          # Gemini API integration
@@ -135,41 +119,36 @@ linguistic-chrome-extension/
 │   ├── overlay.css                # Token styling
 │   └── popup.css                  # Hover popup styling
 ├── ui/
-│   ├── popup.html                 # Extension popup
-│   ├── popup.js                   # Popup controller
-│   ├── settings.html              # Settings page
-│   └── settings.js                # Settings controller
+│   ├── popup.html/js              # Extension popup
+│   └── settings.html/js           # Settings page
 ├── utils/
 │   ├── db-manager.js              # IndexedDB abstraction
 │   └── learned-words.js           # Learned words tracker
-└── icons/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
+└── icons/                         # Extension icons
 ```
 
-## API Key Configuration
+## Architecture
 
-### Getting a Gemini API Key
+### API Key Management
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click "Get API Key" or "Create API Key"
-4. Copy the generated key (starts with `AIza...`)
+**Important Security Note**: The Gemini API key is embedded in the extension by the developer in `config.js`. This means:
 
-### API Key Security
+✅ **Pros**:
+- Users don't need their own API key
+- Zero configuration for end users
+- Instant usability after installation
 
-- Your API key is stored **locally** in Chrome's storage
-- It is **never** sent to any server except Google's Gemini API
-- The key is **not** shared across devices
-- You can delete it anytime in the extension settings
+⚠️ **Cons**:
+- API key is visible to anyone who installs the extension
+- All users share the same rate limits
+- Free tier: 15 req/min, 1,500 req/day (shared)
 
-### API Usage & Costs
+For production deployments with many users, consider:
+1. Backend proxy server (recommended)
+2. User authentication with individual keys
+3. Paid Gemini API tier
 
-- Gemini 2.0 Flash has a **generous free tier**
-- Free quota: 15 requests per minute, 1,500 requests per day
-- Typical usage: 1-3 requests per article
-- Monitor your usage at [Google AI Studio](https://makersuite.google.com/)
+See [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md) for detailed production strategies.
 
 ## Technical Details
 
@@ -197,16 +176,15 @@ linguistic-chrome-extension/
 
 ## Troubleshooting
 
-### Extension doesn't appear
-- Make sure Developer Mode is enabled in `chrome://extensions/`
-- Try reloading the extension
-- Check console for errors
+### Extension doesn't work
+- **Check**: Is `config.js` configured with a valid API key?
+- **Try**: Reload the extension in `chrome://extensions/`
+- **Check**: Browser console for errors (F12)
 
-### "API key not found" error
-- Open extension popup
-- Enter your Gemini API key
-- Click "Save"
-- Refresh the page and try again
+### "API key not configured" error
+- **Problem**: Developer hasn't configured the API key
+- **Solution**: Edit `config.js` and add your Gemini API key
+- **See**: [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md)
 
 ### "Could not extract article content" error
 - The page might not have clear article structure
@@ -219,16 +197,10 @@ linguistic-chrome-extension/
 - Check your internet connection
 - The first analysis is slower; subsequent loads use cache
 
-### Colors not showing
-- Make sure the extension has permission to access the site
-- Try refreshing the page
-- Check if another extension is interfering
-- Inspect console for CSS errors
-
-### Learned words not persisting
-- Check Chrome storage permissions
-- Try exporting and re-importing the word list
-- Clear browser cache and reload extension
+### Rate limit errors
+- **Problem**: Exceeded Gemini API rate limits (15 req/min or 1,500 req/day)
+- **Solution**: Wait a minute and try again
+- **For Developers**: Consider implementing rate limiting or upgrading to paid tier
 
 ## Privacy & Data
 
@@ -240,7 +212,6 @@ linguistic-chrome-extension/
 - **No personal information**, browsing history, or metadata
 
 ### What data is stored locally?
-- API key (Chrome local storage)
 - Learned words list (Chrome local storage)
 - Cached analyses (IndexedDB, auto-deleted after 7 days)
 
@@ -250,15 +221,17 @@ linguistic-chrome-extension/
 
 ## Development
 
-### Prerequisites
-- Node.js (optional, for development tools)
-- Chrome Developer Mode enabled
-
 ### Local Development
 ```bash
 # Clone repository
 git clone <repo-url>
 cd linguistic-chrome-extension
+
+# Configure API key
+# Edit config.js and add your Gemini API key
+
+# Generate icons
+# Open icons/GENERATE_ICONS.html in browser
 
 # Load in Chrome
 # 1. Open chrome://extensions/
@@ -266,17 +239,11 @@ cd linguistic-chrome-extension
 # 3. Click "Load unpacked"
 # 4. Select the extension directory
 
-# Make changes to code
-# Reload extension in chrome://extensions/
+# Make changes and reload extension
 ```
 
-### Debugging
-- **Background script**: `chrome://extensions/` → Extension details → "Inspect views: service worker"
-- **Content script**: Open DevTools on any page → Console → Look for "Linguistic Lens" logs
-- **Popup**: Right-click extension icon → "Inspect popup"
-
 ### Testing
-1. Navigate to a test article (e.g., Wikipedia, arXiv, Medium)
+1. Navigate to `TEST_ARTICLE.html` in the extension directory
 2. Click extension icon
 3. Choose Quick Mode
 4. Verify:
@@ -291,18 +258,18 @@ cd linguistic-chrome-extension
 - **Content**: Works best on article-style pages (blogs, news, documentation)
 - **PDF**: Direct PDF support not yet implemented
 - **Dynamic content**: May not work on heavily dynamic SPAs without refresh
-- **API limits**: Free Gemini API has rate limits (15 req/min, 1500 req/day)
+- **Rate limits**: Shared API key means shared rate limits across all users
 
 ## Future Enhancements
 
-- [ ] PDF direct support (currently requires copy-paste)
+- [ ] PDF direct support
 - [ ] Screenshot-based analysis for images
 - [ ] Sentence-level translation
 - [ ] Flashcard generation from learned words
 - [ ] Export to Anki
-- [ ] Support for other source languages (Spanish, French, etc.)
+- [ ] Support for other source languages
 - [ ] Offline mode with local NLP models
-- [ ] Browser extension for Firefox
+- [ ] Firefox extension
 
 ## Contributing
 
@@ -313,6 +280,26 @@ Contributions are welcome! Please:
 4. Test thoroughly
 5. Submit a pull request
 
+## Files You Need to Configure
+
+Before distributing or using this extension:
+
+1. **`config.js`** - Add your Gemini API key here
+2. **`icons/`** - Generate icons using `icons/GENERATE_ICONS.html`
+
+That's it! The extension is pre-configured and ready to use once you add your API key.
+
+## Security Best Practices
+
+⚠️ **Important for Developers**:
+
+1. **Never commit your configured `config.js`** to public repositories
+2. **Use `.gitignore`** to exclude `config.js`
+3. **Consider a backend proxy** for production deployments
+4. **Monitor your API usage** at [Google AI Studio](https://makersuite.google.com/)
+5. **Implement rate limiting** on the client side
+6. **Review security guide** in [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md)
+
 ## License
 
 MIT License - See LICENSE file for details
@@ -321,27 +308,23 @@ MIT License - See LICENSE file for details
 
 - **Readability.js**: Mozilla Foundation
 - **Gemini API**: Google AI
-- **Icon Design**: [Your name/credits]
-- **Developed by**: [Your name/team]
+- **Developer**: [Your name/organization]
 
 ## Support
 
-For issues, questions, or feature requests:
-- Open an issue on GitHub
-- Email: [your-email]
-- Documentation: [docs-url]
+- **For End Users**: Contact your extension provider
+- **For Developers**: See [SETUP_FOR_DEVELOPERS.md](SETUP_FOR_DEVELOPERS.md)
+- **Issues**: Open an issue on GitHub
+- **Documentation**: Full docs in this README
 
-## Changelog
+## Quick Links
 
-### v1.0.0 (2024-11-07)
-- Initial release
-- Quick and Deep analysis modes
-- Color-coded POS tagging
-- Hover popups with Hebrew translations
-- Learned words tracking
-- 7-day caching system
-- Cosmic blur animation
+- [Developer Setup Guide](SETUP_FOR_DEVELOPERS.md) - Configure API key and deploy
+- [Test Article](TEST_ARTICLE.html) - Test the extension
+- [Generate Icons](icons/GENERATE_ICONS.html) - Create extension icons
 
 ---
 
 **Made with ❤️ for Hebrew-speaking English learners**
+
+**Ready to use in 3 steps**: Configure API key → Generate icons → Load extension

@@ -40,64 +40,6 @@
       opacity: 0.9;
     }
 
-    .api-key-section {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(10px);
-    }
-
-    .api-key-section.hidden {
-      display: none;
-    }
-
-    .api-key-label {
-      font-size: 13px;
-      margin-bottom: 8px;
-      display: block;
-      font-weight: 500;
-    }
-
-    .api-key-input-group {
-      display: flex;
-      gap: 8px;
-    }
-
-    #apiKeyInput {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      font-size: 13px;
-      outline: none;
-    }
-
-    #apiKeyInput::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    #apiKeyInput:focus {
-      border-color: rgba(255, 255, 255, 0.6);
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .api-key-status {
-      font-size: 11px;
-      margin-top: 6px;
-      opacity: 0.8;
-    }
-
-    .api-key-status.success {
-      color: #7ED321;
-    }
-
-    .api-key-status.error {
-      color: #E24A4A;
-    }
-
     .btn {
       padding: 10px 16px;
       border: none;
@@ -121,17 +63,6 @@
 
     .btn-primary:active {
       transform: translateY(0);
-    }
-
-    .btn-save {
-      background: #7ED321;
-      color: white;
-      font-size: 13px;
-      padding: 8px 12px;
-    }
-
-    .btn-save:hover {
-      background: #6BC116;
     }
 
     .mode-section {
@@ -251,15 +182,6 @@
   </div>
 
   <div id="statusMessage" class="status-message"></div>
-
-  <div id="apiKeySection" class="api-key-section">
-    <label class="api-key-label">מפתח Gemini API:</label>
-    <div class="api-key-input-group">
-      <input type="password" id="apiKeyInput" placeholder="הזן מפתח API">
-      <button id="saveApiKeyBtn" class="btn btn-save">שמור</button>
-    </div>
-    <div id="apiKeyStatus" class="api-key-status"></div>
-  </div>
 
   <div id="modeSection" class="mode-section">
     <div class="mode-title">בחר מצב ניתוח:</div>

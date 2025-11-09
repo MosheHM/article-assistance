@@ -1,73 +1,19 @@
 // popup.js - Extension popup controller
+// API key is now configured by the developer in config.js
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const apiKeySection = document.getElementById('apiKeySection');
-  const apiKeyInput = document.getElementById('apiKeyInput');
-  const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
-  const apiKeyStatus = document.getElementById('apiKeyStatus');
-  const modeSection = document.getElementById('modeSection');
   const quickModeBtn = document.getElementById('quickModeBtn');
   const deepModeBtn = document.getElementById('deepModeBtn');
   const statusMessage = document.getElementById('statusMessage');
   const settingsLink = document.getElementById('settingsLink');
 
-  // Check if API key exists
-  const stored = await chrome.storage.local.get('geminiApiKey');
-  const hasApiKey = stored.geminiApiKey && stored.geminiApiKey.length > 0;
-
-  if (hasApiKey) {
-    apiKeySection.classList.add('hidden');
-    apiKeyStatus.textContent = '✓ מפתח API נשמר';
-    apiKeyStatus.classList.add('success');
-  } else {
-    modeSection.style.opacity = '0.5';
-    modeSection.style.pointerEvents = 'none';
-  }
-
-  // Save API key
-  saveApiKeyBtn.addEventListener('click', async () => {
-    const apiKey = apiKeyInput.value.trim();
-
-    if (!apiKey) {
-      showStatus('נא להזין מפתח API', 'error');
-      return;
-    }
-
-    // Basic validation
-    if (!apiKey.startsWith('AIza')) {
-      showStatus('מפתח API לא תקין (צריך להתחיל ב-AIza)', 'error');
-      return;
-    }
-
-    try {
-      await chrome.storage.local.set({ geminiApiKey: apiKey });
-      apiKeySection.classList.add('hidden');
-      modeSection.style.opacity = '1';
-      modeSection.style.pointerEvents = 'auto';
-      showStatus('מפתח API נשמר בהצלחה!', 'success');
-    } catch (error) {
-      showStatus('שגיאה בשמירת המפתח', 'error');
-      console.error(error);
-    }
-  });
-
   // Quick mode button
   quickModeBtn.addEventListener('click', async () => {
-    if (!hasApiKey && !apiKeyInput.value.trim()) {
-      showStatus('נא להזין מפתח API תחילה', 'error');
-      return;
-    }
-
     activateExtension('quick');
   });
 
   // Deep mode button
   deepModeBtn.addEventListener('click', async () => {
-    if (!hasApiKey && !apiKeyInput.value.trim()) {
-      showStatus('נא להזין מפתח API תחילה', 'error');
-      return;
-    }
-
     activateExtension('deep');
   });
 
@@ -119,13 +65,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       statusMessage.classList.remove('visible');
     }, 3000);
   }
-
-  // Show/hide API key input
-  apiKeyInput.addEventListener('focus', () => {
-    apiKeyInput.type = 'text';
-  });
-
-  apiKeyInput.addEventListener('blur', () => {
-    apiKeyInput.type = 'password';
-  });
 });
